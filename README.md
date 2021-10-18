@@ -2,6 +2,14 @@
 
 Web UI for the developers console
 
+## Getting started
+
+Create a .env.development.local and .env.production.local from the .env.example template
+
+```Bash
+cp .env.example .env.development.local .env.production.local
+```
+
 ## Available Scripts
 
 In the project directory, you can run:
