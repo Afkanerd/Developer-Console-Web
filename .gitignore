@@ -130,4 +130,4 @@ yarn-debug.log*
 yarn-error.log*
 
 # styles
-/styles/index.css
+/src/styles/index.css
