@@ -1,23 +1,39 @@
-import React from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import React, { Fragment } from "react";
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { Loader } from "components";
+import { Toaster } from "react-hot-toast";
 
 import Login from "./Login";
+import Dashboard from "./Dashboard";
 
-const App = ({ loading }) => {
+const App = ({ loading, user }) => {
   if (loading) return <Loader />
   return (
-    <BrowserRouter>
-      <Switch>
-        <Route exact path="/">
-          <Login />
-        </Route>
-      </Switch>
-    </BrowserRouter>
+    <Fragment>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/">
+            {user ? <Redirect to="/dashboard" /> : <Redirect to="/login" />}
+          </Route>
+          <Route exact path="/login">
+            {user ? <Redirect to="/dashboard" /> : <Login />}
+          </Route>
+          <Route exact path="/dashboard">
+            {user ? <Dashboard /> : <Redirect to="/" />}
+          </Route>
+        </Switch>
+      </BrowserRouter>
+
+      <Toaster
+        position="top-center"
+      />
+
+    </Fragment>
   );
 };
 
 export default connect((state) => ({
-  loading: state.loading
+  loading: state.loading,
+  user: state.auth.userId
 }))(App)

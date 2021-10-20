@@ -8,3 +8,9 @@ export const loginAction = (user) => {
     user,
   };
 };
+
+export const logoutAction = () => {
+  return {
+    type: LOGOUT,
+  };
+};
