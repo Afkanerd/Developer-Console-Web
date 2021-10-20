@@ -1,5 +1,14 @@
 import React from "react";
 import logo from "images/logo.svg";
+import toast from "react-hot-toast";
+import { connect } from "react-redux";
+import { loginAction } from "actions/auth";
+import { loadingAction } from "actions/shared";
+import { userLogin } from "services/auth";
+import { useHistory } from "react-router-dom";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import {
   ErrorMessage,
   FormGroup,
@@ -9,17 +18,15 @@ import {
   Button,
 } from "components";
 
-import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-
 const schema = yup.object({
   email: yup.string().email().required(),
   password: yup.string().min(8).required(),
   remember: yup.bool()
 });
 
-const Login = () => {
+const Login = (props) => {
+  const { dispatch } = props;
+  const { push } = useHistory();
   const {
     register,
     handleSubmit,
@@ -29,7 +36,26 @@ const Login = () => {
     resolver: yupResolver(schema),
   });
 
-  const handleLogin = (data) => console.log(data);
+  const handleLogin = (data) => {
+    dispatch(loadingAction(true));
+    userLogin(data)
+      .then(response => {
+        toast.success('Login Successful');
+        dispatch(loginAction(response.data));
+        dispatch(loadingAction(false));
+        push('/dashboard');
+      }
+      )
+      .catch(error => {
+        if (error.response) {
+          console.log(error.response)
+          toast.error(error.response.data.message);
+        } else {
+          toast.error('An error occured');
+        }
+        dispatch(loadingAction(false));
+      })
+  };
 
   return (
     <div className="grid h-screen bg-gradient-to-br from-indigo-800 via-blue-500 to-blue-900 place-items-center">
@@ -62,8 +88,6 @@ const Login = () => {
             </FormGroup>
 
             <FormGroup>
-
-
               <Controller
                 control={control}
                 name="rememberMe"
@@ -86,4 +110,5 @@ const Login = () => {
   );
 };
 
-export default Login;
+
+export default connect()(Login);
