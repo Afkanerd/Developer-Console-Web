@@ -2,6 +2,7 @@ import styled from "styled-components";
 import clsx from "clsx";
 
 export * from "./Loader";
+export * from "./ToggleButton";
 export { default as Navbar } from "./Navbar";
 
 export const ErrorMessage = styled.p.attrs({
