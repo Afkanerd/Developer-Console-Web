@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import logo from "images/logo.svg";
 import toast from "react-hot-toast";
 import { connect } from "react-redux";
@@ -16,6 +16,7 @@ import {
   Label,
   CheckBox,
   Button,
+  ToggleButton
 } from "components";
 
 const schema = yup.object({
@@ -27,6 +28,7 @@ const schema = yup.object({
 const Login = (props) => {
   const { dispatch } = props;
   const { push } = useHistory();
+  const [toggle, setToggle] = useState(false);
   const {
     register,
     handleSubmit,
@@ -78,12 +80,18 @@ const Login = (props) => {
             </FormGroup>
             <FormGroup>
               <Label htmlFor="password">Password</Label>
-              <Input
-                type="password"
-                name="password"
-                {...register("password")}
-                error={errors.password}
-              />
+              <div className="relative">
+                <Input
+                  type={toggle ? "text" : "password"}
+                  name="password"
+                  {...register("password")}
+                  error={errors.password}
+                />
+                <ToggleButton
+                  toggleFunc={setToggle}
+                  value={toggle}
+                />
+              </div>
               {errors.password && <ErrorMessage>{errors.password?.message}</ErrorMessage>}
             </FormGroup>
 
