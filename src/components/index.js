@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import clsx from "clsx";
 
+export * from "./Loader";
+
 export const ErrorMessage = styled.p.attrs({
   className: "text-red-500 mt-2",
 })``;

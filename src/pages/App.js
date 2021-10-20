@@ -1,9 +1,12 @@
 import React from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { connect } from "react-redux";
+import { Loader } from "components";
 
 import Login from "./Login";
 
-const App = () => {
+const App = ({ loading }) => {
+  if (loading) return <Loader />
   return (
     <BrowserRouter>
       <Switch>
@@ -15,4 +18,6 @@ const App = () => {
   );
 };
 
-export default App;
+export default connect((state) => ({
+  loading: state.loading
+}))(App)
