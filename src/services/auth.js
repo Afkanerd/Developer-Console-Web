@@ -11,5 +11,14 @@ export const userLogin = (user) => {
         }).then(response => response)
 };
 
+export const changePassword = (auth, data) => {
+    return axios.put(`/users/${auth.userId}/password`,
+        {
+            session_id: auth.sessionId,
+            password: data.password,
+            new_password: data.newPassword
+        }).then(response => response)
+};
+
 
 
