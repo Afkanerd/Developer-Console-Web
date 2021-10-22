@@ -4,15 +4,23 @@ Web UI for the developers console
 
 ## Getting started
 
-Create a .env.development.local and .env.production.local from the .env.example template
+Create a .env.development.local and .env.production.local from the .env.example template. Place production and development values accordingly
 
 ```Bash
-cp .env.example .env.development.local .env.production.local
+cp .env.example .env.development.local
+```
+
+```Bash
+cp .env.example  .env.production.local
 ```
 
 ## Available Scripts
 
 In the project directory, you can run:
+
+### `yarn install`
+
+Installs dependencies
 
 ### `yarn start`
 
