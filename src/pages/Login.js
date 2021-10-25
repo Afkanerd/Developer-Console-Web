@@ -16,13 +16,13 @@ import {
   Label,
   CheckBox,
   Button,
-  ToggleButton
+  ToggleButton,
 } from "components";
 
 const schema = yup.object({
   email: yup.string().email().required(),
   password: yup.string().min(8).required(),
-  remember: yup.bool()
+  remember: yup.bool(),
 });
 
 const Login = (props) => {
@@ -41,22 +41,47 @@ const Login = (props) => {
   const handleLogin = (data) => {
     dispatch(loadingAction(true));
     userLogin(data)
-      .then(response => {
-        toast.success('Login Successful');
+      .then((response) => {
+        toast.success("Login Successful");
         dispatch(loginAction(response.data));
         dispatch(loadingAction(false));
-        push('/dashboard');
-      }
-      )
-      .catch(error => {
+        push("/dashboard");
+      })
+      .catch((error) => {
         if (error.response) {
-          console.log(error.response)
-          toast.error(error.response.data.message);
+          switch (error.response.status) {
+            case 400:
+              toast.error("An error occured. Please contact support");
+              break;
+            case 401:
+              toast.error(
+                "Sorry you are not authorized to use this service. Please contact support"
+              );
+              break;
+            case 409:
+              toast.error(
+                "There is a possible duplicate of this account please contact support"
+              );
+              break;
+
+            case 429:
+              toast.error(
+                "Too many failed attempts please wait a while and try again"
+              );
+              break;
+            case 500:
+              toast.error("A critical error occured. Please contact support");
+              break;
+            default:
+              toast.error("An error occured, please try again");
+          }
+        } else if (error.request) {
+          toast.error("An error occured, please check your network try again");
         } else {
-          toast.error('An error occured');
+          toast.error("An error occured");
         }
         dispatch(loadingAction(false));
-      })
+      });
   };
 
   return (
@@ -76,7 +101,9 @@ const Login = (props) => {
                 {...register("email")}
                 error={errors.email}
               />
-              {errors.email && <ErrorMessage>{errors.email?.message}</ErrorMessage>}
+              {errors.email && (
+                <ErrorMessage>{errors.email?.message}</ErrorMessage>
+              )}
             </FormGroup>
             <FormGroup>
               <Label htmlFor="password">Password</Label>
@@ -87,12 +114,11 @@ const Login = (props) => {
                   {...register("password")}
                   error={errors.password}
                 />
-                <ToggleButton
-                  toggleFunc={setToggle}
-                  value={toggle}
-                />
+                <ToggleButton toggleFunc={setToggle} value={toggle} />
               </div>
-              {errors.password && <ErrorMessage>{errors.password?.message}</ErrorMessage>}
+              {errors.password && (
+                <ErrorMessage>{errors.password?.message}</ErrorMessage>
+              )}
             </FormGroup>
 
             <FormGroup>
@@ -101,10 +127,7 @@ const Login = (props) => {
                 name="rememberMe"
                 render={({ field: { value, onChange } }) => (
                   <Label className="inline-flex items-center">
-                    <CheckBox
-                      value={value}
-                      onChange={onChange}
-                    />
+                    <CheckBox value={value} onChange={onChange} />
                     <span className="ml-2">remember me</span>
                   </Label>
                 )}
@@ -117,6 +140,5 @@ const Login = (props) => {
     </div>
   );
 };
-
 
 export default connect()(Login);

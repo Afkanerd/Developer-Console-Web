@@ -69,8 +69,34 @@ const Dashboard = (props) => {
       })
       .catch(error => {
         if (error.response) {
-          console.log(error.response)
-          toast.error(error.response.data.message);
+          switch (error.response.status) {
+            case 400:
+              toast.error("An error occured. Please contact support");
+              break;
+            case 401:
+              toast.error(
+                "Sorry you are not authorized to use this service. Please contact support"
+              );
+              break;
+            case 409:
+              toast.error(
+                "There is a possible duplicate of this account please contact support"
+              );
+              break;
+
+            case 429:
+              toast.error(
+                "Too many failed attempts please wait a while and try again"
+              );
+              break;
+            case 500:
+              toast.error("A critical error occured. Please contact support");
+              break;
+            default:
+              toast.error("An error occured, please try again");
+          }
+        } else if (error.request) {
+          toast.error("An error occured, please check your network try again");
         } else {
           toast.error('An error occured');
         }
