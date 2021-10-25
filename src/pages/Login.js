@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "images/logo.svg";
 import toast from "react-hot-toast";
 import { connect } from "react-redux";
@@ -8,6 +8,7 @@ import { userLogin } from "services/auth";
 import { useHistory } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { setCache, getCache, clearCache } from "services/storage";
 import * as yup from "yup";
 import {
   ErrorMessage,
@@ -32,19 +33,38 @@ const Login = (props) => {
   const {
     register,
     handleSubmit,
+    setValue,
     control,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
   });
 
+
+  useEffect(() => {
+    // get the stored user creds to repopulate
+    const cache = getCache();
+    if (cache) {
+      setValue("email", cache.email, {
+        shouldValidate: true
+      });
+      setValue("password", cache.password, {
+        shouldValidate: true
+      });
+    }
+    clearCache();
+  }, [setValue])
+
   const handleLogin = (data) => {
     dispatch(loadingAction(true));
+    // cache details
+    setCache(data);
     userLogin(data)
       .then((response) => {
         toast.success("Login Successful");
         dispatch(loginAction(response.data));
         dispatch(loadingAction(false));
+        clearCache();
         push("/dashboard");
       })
       .catch((error) => {
