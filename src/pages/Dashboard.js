@@ -8,8 +8,17 @@ import { logoutAction } from "actions/auth";
 import { getUserProfile } from "services/profile";
 import { changePassword } from "services/auth";
 import { useHistory } from "react-router-dom";
-import { BsPersonCircle } from "react-icons/bs"
-import { Navbar, Label, FormGroup, Button, ErrorMessage, Input, ToggleButton } from "components";
+import { BsPersonCircle } from "react-icons/bs";
+import {
+  Navbar,
+  Label,
+  FormGroup,
+  Button,
+  ErrorMessage,
+  Input,
+  ToggleButton,
+  ClipBoard,
+} from "components";
 import { Dialog } from "@headlessui/react";
 import { FiXCircle } from "react-icons/fi";
 import { useForm } from "react-hook-form";
@@ -17,10 +26,16 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 const ChangePasswordSchema = yup.object().shape({
-  password: yup.string().required('Password is required'),
-  newPassword: yup.string().min(8, 'Password must be at least 8 characters').required('Please enter password'),
-  confirmPassword: yup.string().min(8, 'Password must be at least 8 characters').required('Please confirm your password')
-    .oneOf([yup.ref('newPassword'), null], 'Passwords do not match')
+  password: yup.string().required("Password is required"),
+  newPassword: yup
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .required("Please enter password"),
+  confirmPassword: yup
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .required("Please confirm your password")
+    .oneOf([yup.ref("newPassword"), null], "Passwords do not match"),
 });
 
 const Dashboard = (props) => {
@@ -30,44 +45,47 @@ const Dashboard = (props) => {
   const [toggle, setToggle] = useState(false);
   const [toggle2, setToggle2] = useState(false);
   const [toggle3, setToggle3] = useState(false);
-  const closeButtonRef = useRef(null)
-  const { register, handleSubmit, watch, formState: { errors } } = useForm({
-    resolver: yupResolver(ChangePasswordSchema)
+  const closeButtonRef = useRef(null);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(ChangePasswordSchema),
   });
-
 
   useEffect(() => {
     if (profile.id) return;
     else {
       getUserProfile(auth)
-        .then(response => {
-          toast.success('Profile Loaded');
+        .then((response) => {
+          toast.success("Profile Loaded");
           dispatch(saveProfileAction(response.data));
           dispatch(loadingAction(false));
-        }
-        )
-        .catch(error => {
+        })
+        .catch((error) => {
           if (error.response) {
             toast.error(error.response.data.message);
           } else {
-            toast.error('An error occured');
+            toast.error("An error occured");
           }
           dispatch(loadingAction(false));
-        })
+        });
     }
-  }, [profile, auth, dispatch])
+  }, [profile, auth, dispatch]);
 
   const handleChangePassword = (data) => {
     dispatch(loadingAction(true));
     changePassword(auth, data)
-      .then(response => {
+      .then((response) => {
         toast.success("Password Changed successfully please login");
         setTimeout(() => {
           dispatch(loadingAction(false));
           dispatch(logoutAction());
         }, 1000);
       })
-      .catch(error => {
+      .catch((error) => {
         if (error.response) {
           switch (error.response.status) {
             case 400:
@@ -98,11 +116,11 @@ const Dashboard = (props) => {
         } else if (error.request) {
           toast.error("An error occured, please check your network try again");
         } else {
-          toast.error('An error occured');
+          toast.error("An error occured");
         }
         dispatch(loadingAction(false));
-      })
-  }
+      });
+  };
 
   return (
     <>
@@ -122,20 +140,38 @@ const Dashboard = (props) => {
 
           {profile.id ? (
             <div className="overflow-ellipsis">
-              <h3 className="text-xl">User ID</h3>
+              <div className="flex items-center">
+                <h3 className="mr-2 text-xl">User ID</h3>
+                <ClipBoard
+                  text="User ID"
+                  value={profile?.id}
+                />
+              </div>
               <p className="mb-2 break-words">{profile?.id}</p>
-              <h3 className="text-xl">Auth ID</h3>
+              <div className="flex items-center">
+                <h3 className="mr-2 text-xl">Auth ID</h3>
+                <ClipBoard
+                  text="Auth ID"
+                  value={profile?.auth_id}
+                />
+              </div>
               <p className="mb-2 break-words">{profile?.auth_id}</p>
               <h3 className="text-xl">Email</h3>
               <p className="mb-2 break-words">{profile?.email}</p>
               <h3 className="text-xl">Created On</h3>
-              <p className="mb-2 break-words">{new Date(profile?.createdAt).toLocaleString()}</p>
+              <p className="mb-2 break-words">
+                {new Date(profile?.createdAt).toLocaleString()}
+              </p>
               <h3 className="text-xl">Last Update</h3>
-              <p className="mb-2 break-words">{new Date(profile?.updatedAt).toLocaleString()}</p>
+              <p className="mb-2 break-words">
+                {new Date(profile?.updatedAt).toLocaleString()}
+              </p>
             </div>
           ) : (
             <div className="my-4">
-              <h3 className="text-xl text-center text-red-500">failed to  auto-load profile</h3>
+              <h3 className="text-xl text-center text-red-500">
+                failed to auto-load profile
+              </h3>
               <button
                 className="block py-2 mx-auto my-2 text-white bg-blue-500 rounded-lg appearance-none px-7"
                 onClick={() => push("/login")}
@@ -144,11 +180,11 @@ const Dashboard = (props) => {
               </button>
             </div>
           )}
-
         </div>
       </div>
 
-      <Dialog as="div"
+      <Dialog
+        as="div"
         className="fixed inset-0 z-10 overflow-y-auto bg-white bg-opacity-95"
         initialFocus={closeButtonRef}
         open={modal}
@@ -175,14 +211,12 @@ const Dashboard = (props) => {
                     {...register("password")}
                     error={errors.password}
                   />
-                  <ToggleButton
-                    toggleFunc={setToggle}
-                    value={toggle}
-                  />
+                  <ToggleButton toggleFunc={setToggle} value={toggle} />
                 </div>
-                {errors.password && <ErrorMessage>{errors.password.message}</ErrorMessage>}
+                {errors.password && (
+                  <ErrorMessage>{errors.password.message}</ErrorMessage>
+                )}
               </FormGroup>
-
 
               <FormGroup>
                 <Label>New Password</Label>
@@ -194,13 +228,12 @@ const Dashboard = (props) => {
                     {...register("newPassword")}
                     error={errors.newPassword}
                   />
-                  <ToggleButton
-                    toggleFunc={setToggle2}
-                    value={toggle2}
-                  />
+                  <ToggleButton toggleFunc={setToggle2} value={toggle2} />
                 </div>
-                {errors.newPassword && <ErrorMessage>{errors.newPassword.message}</ErrorMessage>}
-                <PasswordStrengthBar password={watch('newPassword')} />
+                {errors.newPassword && (
+                  <ErrorMessage>{errors.newPassword.message}</ErrorMessage>
+                )}
+                <PasswordStrengthBar password={watch("newPassword")} />
               </FormGroup>
 
               <FormGroup>
@@ -213,20 +246,17 @@ const Dashboard = (props) => {
                     {...register("confirmPassword")}
                     error={errors.confirmPassword}
                   />
-                  <ToggleButton
-                    toggleFunc={setToggle3}
-                    value={toggle3}
-                  />
+                  <ToggleButton toggleFunc={setToggle3} value={toggle3} />
                 </div>
-                {errors.confirmPassword && <ErrorMessage>{errors.confirmPassword.message}</ErrorMessage>}
+                {errors.confirmPassword && (
+                  <ErrorMessage>{errors.confirmPassword.message}</ErrorMessage>
+                )}
                 <PasswordStrengthBar password={watch("confirmPassword")} />
               </FormGroup>
 
-              <Button type="submit">
-                Change Password
-              </Button>
+              <Button type="submit">Change Password</Button>
             </form>
-            <button ref={closeButtonRef} hidden ></button>
+            <button ref={closeButtonRef} hidden></button>
           </div>
         </div>
       </Dialog>
@@ -234,8 +264,7 @@ const Dashboard = (props) => {
   );
 };
 
-
 export default connect((state) => ({
   auth: state.auth,
-  profile: state.profile
-}))(Dashboard)
+  profile: state.profile,
+}))(Dashboard);
