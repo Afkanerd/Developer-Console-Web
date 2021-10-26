@@ -3,6 +3,8 @@ import clsx from "clsx";
 
 export * from "./Loader";
 export * from "./ToggleButton";
+export * from "./ClipBoard";
+export * from "./ToolTip";
 export { default as Navbar } from "./Navbar";
 
 export const ErrorMessage = styled.p.attrs({
@@ -19,7 +21,7 @@ export const Input = styled.input.attrs((props) => ({
     props.error
       ? "border-red-500 focus:border-red-500 focus:ring-red-200"
       : "focus:border-blue-400 focus:ring-blue-200"
-  )
+  ),
 }))``;
 
 export const Label = styled.label.attrs({
@@ -31,7 +33,7 @@ export const CheckBox = styled.input.attrs((props) => ({
   className: clsx(
     "rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-offset-0 focus:ring-blue-200 focus:ring-opacity-50",
     props.error && "border-red-500 focus:border-red-500"
-  )
+  ),
 }))``;
 
 export const Button = styled.button.attrs((props) => ({
@@ -40,5 +42,5 @@ export const Button = styled.button.attrs((props) => ({
     props.error
       ? "text-black bg-gray-400"
       : "text-white bg-blue-600 hover:bg-blue-800"
-  )
+  ),
 }))``;
