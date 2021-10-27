@@ -125,7 +125,7 @@ const Dashboard = (props) => {
   return (
     <>
       <Navbar />
-      <div className="h-screen px-4 py-10 md:p-10 bg-gradient-to-br from-indigo-800 via-blue-500 to-blue-900">
+      <div className="px-4 py-10 md:p-10 bg-gradient-to-br from-gray-800 to-gray-400">
         <div className="w-full p-8 bg-white md:w-1/2 rounded-xl md:mx-auto">
           <div className="mb-4">
             <BsPersonCircle size={100} className="mx-auto mb-2" />
@@ -156,6 +156,14 @@ const Dashboard = (props) => {
                 />
               </div>
               <p className="mb-2 break-words">{profile?.auth_id}</p>
+              <div className="flex items-center">
+                <h3 className="mr-2 text-xl">Auth Key</h3>
+                <ClipBoard
+                  text="Auth Key"
+                  value={profile?.auth_key}
+                />
+              </div>
+              <p className="mb-2 break-words">{profile?.auth_key}</p>
               <h3 className="text-xl">Email</h3>
               <p className="mb-2 break-words">{profile?.email}</p>
               <h3 className="text-xl">Created On</h3>
