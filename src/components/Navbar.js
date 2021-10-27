@@ -9,6 +9,7 @@ import { loadingAction } from "actions/shared";
 import toast from "react-hot-toast";
 import { clearCache } from "services/storage";
 import { userLogOut } from "services/auth";
+import { removeProfileAction } from "actions/profile";
 
 const Navbar = ({ dispatch, auth }) => {
     const handleLogOut = () => {
@@ -17,6 +18,7 @@ const Navbar = ({ dispatch, auth }) => {
             .then(() => {
                 // clear active session state in memory
                 dispatch(logoutAction());
+                dispatch(removeProfileAction())
                 // clear any cached sessions
                 clearCache();
                 toast.success("Logout successful");
