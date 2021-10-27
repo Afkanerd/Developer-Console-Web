@@ -15,13 +15,11 @@ import Dashboard from "./Dashboard";
 const App = ({ loading, user, dispatch, status }) => {
 
   const handleOnIdle = () => {
-    console.log('user is idle');
     dispatch(statustAction('idle'));
     const time = getRemainingTime();
-    if (time < 3000) {
+    if (time < 30000) {
       toast('You will be logged out soon for inactivity')
     }
-
     setTimeout(() => {
       if (time === 0) {
         dispatch(logoutAction());
@@ -29,7 +27,7 @@ const App = ({ loading, user, dispatch, status }) => {
         clearCache();
         pause();
       }
-    }, 3000);
+    }, 30000);
   }
 
   const handleOnActive = () => {
@@ -38,10 +36,9 @@ const App = ({ loading, user, dispatch, status }) => {
 
   const handleOnAction = () => {
     const time = getRemainingTime();
-    if (time < 3000 && status === 'idle') {
+    if (time < 30000 && status === 'idle') {
       toast('You will be logged out in soon for inactivity')
     }
-
     setTimeout(() => {
       if (time === 0) {
         dispatch(logoutAction());
@@ -49,7 +46,7 @@ const App = ({ loading, user, dispatch, status }) => {
         clearCache();
         pause();
       }
-    }, 3000);
+    }, 30000);
   }
 
   const {
@@ -57,7 +54,7 @@ const App = ({ loading, user, dispatch, status }) => {
     pause,
     getRemainingTime,
   } = useIdleTimer({
-    timeout: 1000 * 10,
+    timeout: 1000 * 10 * 15,
     onAction: handleOnAction,
     onActive: handleOnActive,
     onIdle: handleOnIdle,
