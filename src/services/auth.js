@@ -20,5 +20,11 @@ export const changePassword = (auth, data) => {
         }).then(response => response)
 };
 
+export const userLogOut = (auth, data) => {
+    return axios.post(`/users/${auth.userId}/logout`,
+        {
+            session_id: auth.sessionId,
+        }).then(response => response)
+};
 
 
