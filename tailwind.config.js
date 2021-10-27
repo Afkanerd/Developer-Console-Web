@@ -5,7 +5,13 @@ module.exports = {
     fontFamily: {
       sans: ["Rajdhani", "sans-serif"],
     },
-    extend: {},
+    extend: {
+      colors: {
+        primary: {
+          light: "#9bbff2"
+        }
+      }
+    },
   },
   variants: {
     extend: {},

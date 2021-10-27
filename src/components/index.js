@@ -44,3 +44,9 @@ export const Button = styled.button.attrs((props) => ({
       : "text-white bg-blue-600 hover:bg-blue-800"
   ),
 }))``;
+
+export const Container = styled.div.attrs((props) => ({
+  className: clsx("bg-cover bg-center", ...props.className),
+}))`
+  ${(props) => `background-image: url("${props.imageSrc}");`}
+`;

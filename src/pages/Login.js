@@ -18,6 +18,7 @@ import {
   CheckBox,
   Button,
   ToggleButton,
+  Container,
 } from "components";
 
 const schema = yup.object({
@@ -40,20 +41,19 @@ const Login = (props) => {
     resolver: yupResolver(schema),
   });
 
-
   useEffect(() => {
     // get the stored user creds to repopulate
     const cache = getCache();
     if (cache) {
       setValue("email", cache.email, {
-        shouldValidate: true
+        shouldValidate: true,
       });
       setValue("password", cache.password, {
-        shouldValidate: true
+        shouldValidate: true,
       });
     }
     clearCache();
-  }, [setValue])
+  }, [setValue]);
 
   const handleLogin = (data) => {
     dispatch(loadingAction(true));
@@ -105,9 +105,12 @@ const Login = (props) => {
   };
 
   return (
-    <div className="grid h-screen bg-gradient-to-br from-indigo-800 via-blue-500 to-blue-900 place-items-center">
+    <Container
+      className="grid h-screen place-items-center"
+      imageSrc="https://images2.alphacoders.com/830/830832.png"
+    >
       <div className="container flex flex-wrap items-center mx-auto">
-        <div className="flex flex-col w-full p-8 m-4 mt-10 bg-white lg:w-2/6 md:w-1/2 rounded-xl md:mx-auto md:mt-0">
+        <div className="flex flex-col w-full p-8 m-4 mt-10 bg-white shadow-lg lg:w-2/6 md:w-1/2 rounded-xl md:mx-auto md:mt-0">
           <div className="mb-4">
             <img src={logo} alt="logo" className="mx-auto h-36" />
             <h1 className="text-3xl text-center">Developer Console</h1>
@@ -157,7 +160,7 @@ const Login = (props) => {
           </form>
         </div>
       </div>
-    </div>
+    </Container>
   );
 };
 
