@@ -24,7 +24,7 @@ import {
 const schema = yup.object({
   email: yup.string().email().required(),
   password: yup.string().min(8).required(),
-  remember: yup.bool(),
+  rememberMe: yup.bool(),
 });
 
 const Login = (props) => {
@@ -44,15 +44,15 @@ const Login = (props) => {
   useEffect(() => {
     // get the stored user creds to repopulate
     const cache = getCache();
-    if (cache) {
+    if (cache && cache.email) {
       setValue("email", cache.email, {
         shouldValidate: true,
       });
       setValue("password", cache.password, {
         shouldValidate: true,
       });
+      clearCache();
     }
-    clearCache();
   }, [setValue]);
 
   const handleLogin = (data) => {
@@ -64,7 +64,12 @@ const Login = (props) => {
         toast.success("Login Successful");
         dispatch(loginAction(response.data));
         dispatch(loadingAction(false));
+        // remove any cached email and password
         clearCache();
+        // if user wants to be remembered then cache their session
+        if (data.rememberMe) {
+          setCache(response.data);
+        }
         push("/dashboard");
       })
       .catch((error) => {
