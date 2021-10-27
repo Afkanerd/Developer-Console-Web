@@ -1,4 +1,4 @@
-import { LOGIN, LOGOUT } from "actions/auth";
+import { LOGIN, LOGOUT, STATUS } from "actions/auth";
 
 // auth reducer
 const authReducer = (state = {}, action) => {
@@ -7,6 +7,8 @@ const authReducer = (state = {}, action) => {
       return action.user;
     case LOGOUT:
       return {};
+    case STATUS:
+      return { ...state, status: action.status };
     default:
       return state;
   }

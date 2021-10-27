@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import logo from "images/logo.svg";
 import toast from "react-hot-toast";
 import { connect } from "react-redux";
-import { loginAction } from "actions/auth";
+import { loginAction, statustAction } from "actions/auth";
 import { loadingAction } from "actions/shared";
 import { userLogin } from "services/auth";
 import { useHistory } from "react-router-dom";
@@ -63,6 +63,7 @@ const Login = (props) => {
       .then((response) => {
         toast.success("Login Successful");
         dispatch(loginAction(response.data));
+        dispatch(statustAction('active'));
         dispatch(loadingAction(false));
         // remove any cached email and password
         clearCache();
