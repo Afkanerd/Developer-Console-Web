@@ -79,7 +79,13 @@ const App = ({ loading, user, dispatch, status }) => {
   if (loading) return <Loader />;
   return (
     <Fragment>
-      <Toaster position="top-center" />
+      <Toaster
+        position="bottom-right"
+        reverseOrder={false}
+        toastOptions={{
+          duration: 5000
+        }}
+      />
       <BrowserRouter>
         <Switch>
           <Route exact path="/">
