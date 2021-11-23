@@ -56,8 +56,10 @@ const Dashboard = (props) => {
   });
 
   useEffect(() => {
-    if (profile.id) return;
-    else {
+    dispatch(loadingAction(true))
+    if (profile.id) {
+      dispatch(loadingAction(false))
+    } else {
       getUserProfile(auth)
         .then((response) => {
           toast.success("Profile Loaded");
@@ -125,7 +127,7 @@ const Dashboard = (props) => {
   return (
     <>
       <Navbar />
-      <div className="px-4 py-10 md:p-10 bg-gradient-to-br from-gray-800 to-gray-400">
+      <div className="h-screen px-4 py-10 overflow-auto md:p-10 bg-gradient-to-br from-gray-800 to-gray-400">
         <div className="w-full p-8 bg-white md:w-1/2 rounded-xl md:mx-auto">
           <div className="mb-4">
             <BsPersonCircle size={100} className="mx-auto mb-2" />
